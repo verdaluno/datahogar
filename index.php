@@ -10,14 +10,41 @@
         <div class="row">
             <div class="col-md-12">
                 <hr>
-                <p class="nombro">$ 35000</p>
+                <?php
+                include("abrir_conexion.php");
+                $resultados = mysqli_query($conexion,"SELECT SUM(valor) AS total FROM $tablaIngresos");
+                while($consulta = mysqli_fetch_array($resultados)) {
+                    $sum = $consulta['total'];
+                    echo "<p class=\"nombro\">$ ". $sum ."</p>";
+                    include("cerrar_conexion.php");
+                }
+                ?>
                 <hr>
                 <h2>Ingresos</h2>
-                <form action="#" method="post">
+                <form action="index.php" method="post">
                     <input class="form-control" type="text" name="ingreso" placeholder="Ingresos"> 
                     <input class="form-control" type="text" name="fuente" placeholder="Fuente">
                     <input class="form-control" type="date" name="fech-in" placeholder="Fecha">
                     <input class="form-control btn-outline-success" type="submit" name="btn-in" value="Actualizar">
+                <?php
+                // INSERTAR
+                if (isset($_POST['btn-in'])){
+              
+                    $ingreso = $_POST['ingreso'];
+                    $fuente = $_POST['fuente'];
+                    $date = date("Y")."-".date("m")."-".date("d");
+      
+                    if($ingreso == "" || $fuente == "" || $date == ""){
+                        echo "Complete todos los campos.";
+                    } else {
+                    include("abrir_conexion.php");
+                    $conexion->query("INSERT INTO $tablaIngresos (valor,fuente,fecha) values('$ingreso','$fuente','$date')"); 
+                    include("cerrar_conexion.php");
+                        echo "Datos cargados corectamente.";
+                    }
+                }
+                ?>
+                
                 </form>
                 <h2>Gastos</h2>
                 <form action="#" method="post">
