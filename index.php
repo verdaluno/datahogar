@@ -12,10 +12,10 @@
                 <hr>
                 <?php
                 include("abrir_conexion.php");
-                $resultados = mysqli_query($conexion,"SELECT SUM(valor) AS total FROM $tablaIngresos");
+                $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal ORDER BY id_total DESC LIMIT 1");
                 while($consulta = mysqli_fetch_array($resultados)) {
-                    $sum = $consulta['total'];
-                    echo "<p class=\"nombro\">$ ". $sum ."</p>";
+                    $mostrar = $consulta['total'];
+                    echo "<p class=\"nombro\">$ ". $mostrar ."</p>";
                     include("cerrar_conexion.php");
                 }
                 ?>
@@ -23,8 +23,15 @@
                 <h2>Ingresos</h2>
                 <form action="index.php" method="post">
                     <input class="form-control" type="text" name="ingreso" placeholder="Ingresos"> 
-                    <input class="form-control" type="text" name="fuente" placeholder="Fuente">
-                    <input class="form-control" type="date" name="fech-in" placeholder="Fecha">
+                    <select class="form-control" type="text" name="fuente">
+                        <option value="Seleccione Motivo">Seleccione Motivo</option>
+                        <option value="Nómina">Nómina</option>
+                        <option value="Meloso">Meloso</option>
+                        <option value="Verda Luno">Verda Luno</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <input class="form-control" type="text" name="detalle" placeholder="Detalles">
+                    <input class="form-control" type="date" name="fechIn" placeholder="Fecha">
                     <input class="form-control btn-outline-success" type="submit" name="btn-in" value="Actualizar">
                 <?php
                 // INSERTAR
@@ -32,13 +39,22 @@
               
                     $ingreso = $_POST['ingreso'];
                     $fuente = $_POST['fuente'];
-                    $date = date("Y")."-".date("m")."-".date("d");
-      
-                    if($ingreso == "" || $fuente == "" || $date == ""){
+                    $detalle = $_POST['detalle'];
+                    $fechai = $_POST['fechIn'];
+                    
+                    if($ingreso == "" || $fuente == "" || $fechai == ""){
                         echo "Complete todos los campos.";
                     } else {
                     include("abrir_conexion.php");
-                    $conexion->query("INSERT INTO $tablaIngresos (valor,fuente,fecha) values('$ingreso','$fuente','$date')"); 
+                    $conexion->query("INSERT INTO $tablaIngresos (valor,fuente,detalle_i,fecha) values('$ingreso','$fuente','$detalle','$date')"); 
+                    }
+                    $resultados = mysqli_query($conexion,"SELECT SUM(valor) AS total FROM $tablaIngresos");
+                    while($consulta = mysqli_fetch_array($resultados)) {
+                    
+                        $sum = $consulta['total'];
+
+                    $conexion->query("INSERT INTO $tablaTotal (total) values('$sum')");
+
                     include("cerrar_conexion.php");
                         echo "Datos cargados corectamente.";
                     }
@@ -48,10 +64,53 @@
                 </form>
                 <h2>Gastos</h2>
                 <form action="#" method="post">
-                    <input class="form-control" type="text" name="gasto" placeholder="Monto"> 
+                    <input class="form-control" type="text" name="gasto" placeholder="Monto">
+                    <select class="form-control" type="text" name="fuenteg">
+                        <option value="Seleccione Motivo">Seleccione Motivo</option>
+                        <option value="Arriendo">Arriendo</option>
+                        <option value="Mercado">Mercado</option>
+                        <option value="Vestuario">Vestuario</option>
+                        <option value="Estudio">Estudio</option>
+                        <option value="Empresas">Empresas</option>
+                        <option value="Otro">Otro</option>
+                    </select>
                     <input class="form-control" type="text" name="razon" placeholder="Detalles">
-                    <input class="form-control" type="date" name="fech-out" placeholder="Fecha">
+                    <input class="form-control" type="date" name="fechOut" placeholder="Fecha">
                     <input class="form-control btn-outline-danger" type="submit" name="btn-out" value="Actualizar">
+                    <?php
+                // ACTUALIZAR
+                if (isset($_POST['btn-out'])){
+              
+                    $egreso = $_POST['gasto'];
+                    $fuenteg = $_POST['fuenteg'];
+                    $razon = $_POST['razon'];
+                    $fechae = $_POST['fechOut'];;
+                    
+                    if($egreso == "" || $fuenteg == "" || $fechae == ""){
+                        echo "Complete todos los campos.";
+                    } else {
+                    include("abrir_conexion.php");
+                    $conexion->query("INSERT INTO $tablaEgresos (monto,detalle_e,detalles,fecha) values('$egreso','$fuenteg','$razon','$fechae')"); 
+                    }
+                    $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal ORDER BY id_total DESC LIMIT 1");
+                    while($consulta = mysqli_fetch_array($resultados)) {
+                    $total = $consulta['total'];
+                    
+                        $total = $consulta['total'];
+                        $act = $total - $egreso;
+                        
+                        echo $total . "Total </br>";
+                        echo $egreso . " Egreso </br>";
+                        echo $act . " Act </br>";
+
+
+                    $conexion->query("INSERT INTO $tablaTotal (total) values('$act')");
+
+                    include("cerrar_conexion.php");
+                    echo "Datos cargados corectamente.";
+                    }
+                }
+                ?>
                 </form>
             </div>
         </div>

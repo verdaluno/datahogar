@@ -3,13 +3,14 @@
     $host = "localhost";
     $database = "nombroj";
     $name = "root";
-    $clave = "132435";
+    $clave = "";
 
     // Tablas
 
     $tablaUsuarios = "usuarios";
     $tablaIngresos = "ingresos";
     $tablaEgresos = "egresos";
+    $tablaTotal = "total";
 
     error_reporting(1);
 
