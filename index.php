@@ -57,7 +57,7 @@
                     $conexion->query("INSERT INTO $tablaTotal (total) values('$sum')");
 
                     include("cerrar_conexion.php");
-                        echo "Datos cargados corectamente.";
+                    header('Location:index.php');
                     }
                 }
                 ?>
@@ -108,7 +108,7 @@
                     $conexion->query("INSERT INTO $tablaTotal (total) values('$act')");
 
                     include("cerrar_conexion.php");
-                    echo "Datos cargados corectamente.";
+                    header('Location:index.php');
                     }
                 }
                 ?>
