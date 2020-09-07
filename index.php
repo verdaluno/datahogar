@@ -1,6 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalabel=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <title>Nombroj - Cuentas claras, control a la mano.</title>
         <link rel="stylesheet" type="text/css" href="css/estilos.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -46,7 +47,7 @@
                         echo "Complete todos los campos.";
                     } else {
                     include("abrir_conexion.php");
-                    $conexion->query("INSERT INTO $tablaIngresos (valor,fuente,detalle_i,fecha) values('$ingreso','$fuente','$detalle','$date')"); 
+                    $conexion->query("INSERT INTO $tablaIngresos (valor,fuente,detalle_i,fecha) values('$ingreso','$fuente','$detalle','$fechai')"); 
                     }
                     $resultados = mysqli_query($conexion,"SELECT SUM(valor) AS total FROM $tablaIngresos");
                     while($consulta = mysqli_fetch_array($resultados)) {
