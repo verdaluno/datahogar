@@ -37,7 +37,7 @@
                 <?php
                 // INSERTAR
                 if (isset($_POST['btn-in'])){
-              
+                
                     $ingreso = $_POST['ingreso'];
                     $fuente = $_POST['fuente'];
                     $detalle = $_POST['detalle'];
@@ -47,19 +47,29 @@
                         echo "Complete todos los campos.";
                     } else {
                     include("abrir_conexion.php");
+                    // INSERTO VALORES DE INGRESOS
                     $conexion->query("INSERT INTO $tablaIngresos (valor,fuente,detalle_i,fecha) values('$ingreso','$fuente','$detalle','$fechai')"); 
                     }
-                    $resultados = mysqli_query($conexion,"SELECT SUM(valor) AS total FROM $tablaIngresos");
+                    // CONSULTA ÚLTIMO VALOR INGRESADO
+                    $resultados = mysqli_query($conexion,"SELECT * FROM $tablaIngresos ORDER BY id_in DESC LIMIT 1");
                     while($consulta = mysqli_fetch_array($resultados)) {
+                        $valuno = $consulta['valor'];
+                        echo $valuno . "</br> valor ingresaro";
+                    }
+                    // CONSULTA ÚLTIMO VALOR TOTAL
+                    $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal ORDER BY id_total DESC LIMIT 1");
+                    while($consulta = mysqli_fetch_array($resultados)) {
+                        $valdos = $consulta['total'];
+                        echo $valdos . "</br> valor total";
+                    }
                     
-                        $sum = $consulta['total'];
+                    echo $sum = $valuno + $valdos . "suma de los dos";
 
                     $conexion->query("INSERT INTO $tablaTotal (total) values('$sum')");
 
                     include("cerrar_conexion.php");
                     header('Location:index.php');
                     }
-                }
                 ?>
                 
                 </form>
@@ -91,8 +101,10 @@
                         echo "Complete todos los campos.";
                     } else {
                     include("abrir_conexion.php");
+                    // INSERTAR VALOR A RESTAR
                     $conexion->query("INSERT INTO $tablaEgresos (monto,detalle_e,detalles,fecha) values('$egreso','$fuenteg','$razon','$fechae')"); 
                     }
+                    // CONSULTA VALOR TOTAL QUE SERÁ DISMINUIDO
                     $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal ORDER BY id_total DESC LIMIT 1");
                     while($consulta = mysqli_fetch_array($resultados)) {
                     $total = $consulta['total'];
@@ -100,11 +112,6 @@
                         $total = $consulta['total'];
                         $act = $total - $egreso;
                         
-                        echo $total . "Total </br>";
-                        echo $egreso . " Egreso </br>";
-                        echo $act . " Act </br>";
-
-
                     $conexion->query("INSERT INTO $tablaTotal (total) values('$act')");
 
                     include("cerrar_conexion.php");
