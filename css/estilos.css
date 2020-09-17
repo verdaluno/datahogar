@@ -1,19 +1,38 @@
 /* Desarrollador: Jawuer Morales
 * Contacto: verdaluno.com | jawuer.com
 * Versión: 1.0
-* Descripción: Sistema de cuentas simples para la administración de dinero en casa, genera archivo pdf según rango deseado.
+* Descripción: Sistema de cuentas simples para la administración de dinero en casa,
+* genera archivo pdf según rango deseado.
 */
 * {
-    margin: auto;
     padding: 0px;
+    margin: 0px;
+}
+.login {
+    text-align:center;
+    margin:30% 0% 0% 0%;
+}
+.login h2 {
+    font-size:120px;
+    color:#292929;
 }
 .nombro {
     color:#35a700;
     text-align: center;
     font-size: 54px;
 }
-footer {
-    box-shadow: #000 -1px -1px 3px;
-    text-align: center;
+form {
+    text-align:center;
+    padding:6% 0% 6% 0%;
+}
+nav {
+    background-color: #292929;
+    color: #fff;
+    width: 100%;
+}
+nav ul li {
+    background-color: #a2a2a2;
+    text-decoration: none;
+    list-style: none;
     padding:2%;
 }
