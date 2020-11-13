@@ -18,7 +18,8 @@
         while($consulta = mysqli_fetch_array($resultados)) {
 
             $_SESSION['correcto']=1;
-            $_SESSION['nomo'] = $consulta['nombres'];            
+            $_SESSION['nomo'] = $consulta['nombres'];
+            $_SESSION['idusr'] = $consulta['id_usr'];
             }
 
             header('Location:dashboard.php');
@@ -35,13 +36,15 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, user-scalabel=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <title>Nombroj - Cuentas claras, control a la mano.</title>
+        <title>DataHogar - Cuentas claras, control a la mano.</title>
+        <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="img/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="css/estilos.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Nombroj</a>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <a class="navbar-brand" href="dashboard.php">DataHogar</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -56,11 +59,13 @@
     
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12"><br/>
+                <p>Usuario activo: <?php echo "<b>" . $_SESSION['nomo'] . "</b>"; ?></p>
                 <hr>
                 <?php
                 include("abrir_conexion.php");
-                $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal ORDER BY id_total DESC LIMIT 1");
+                $iduser = $_SESSION['idusr'];
+                $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal WHERE id_usr = '$iduser' ORDER BY id_total DESC LIMIT 1");
                 while($consulta = mysqli_fetch_array($resultados)) {
                     $mostrar = $consulta['total'];
                     echo "<p class=\"nombro\">$ ". $mostrar ."</p>";
@@ -74,17 +79,18 @@
                     <select class="form-control" type="text" name="fuente">
                         <option value="Seleccione Motivo">Seleccione Motivo</option>
                         <option value="Nómina">Nómina</option>
-                        <option value="Meloso">Meloso</option>
-                        <option value="Verda Luno">Verda Luno</option>
+                        <option value="Independiente">Independiente</option>
+                        <option value="Devoluciones">Devoluciones</option>
                         <option value="Otro">Otro</option>
                     </select>
                     <input class="form-control" type="text" name="detalle" placeholder="Detalles">
-                    <input class="form-control" type="date" name="fechIn" placeholder="Fecha">
+                    <input class="form-control" type="date" name="fechIn" value="<?php echo date('Y-m-d'); ?>">
                     <input class="form-control btn-outline-success" type="submit" name="btn-in" value="Actualizar">
                 <?php
                 // INSERTAR
                 if (isset($_POST['btn-in'])){
                 
+                    $idusr = $_SESSION['idusr'];
                     $ingreso = $_POST['ingreso'];
                     $fuente = $_POST['fuente'];
                     $detalle = $_POST['detalle'];
@@ -95,7 +101,7 @@
                     } else {
                     include("abrir_conexion.php");
                     // INSERTO VALORES DE INGRESOS
-                    $conexion->query("INSERT INTO $tablaIngresos (valor,fuente,detalle_i,fecha) values('$ingreso','$fuente','$detalle','$fechai')"); 
+                    $conexion->query("INSERT INTO $tablaIngresos (id_usr,valor,fuente,detalle_i,fecha) values('$idusr','$ingreso','$fuente','$detalle','$fechai')"); 
                     }
                     // CONSULTA ÚLTIMO VALOR INGRESADO
                     $resultados = mysqli_query($conexion,"SELECT * FROM $tablaIngresos ORDER BY id_in DESC LIMIT 1");
@@ -103,17 +109,17 @@
                         $valuno = $consulta['valor'];
                     }
                     // CONSULTA ÚLTIMO VALOR TOTAL
-                    $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal ORDER BY id_total DESC LIMIT 1");
+                    $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal WHERE id_usr = '$idusr' ORDER BY id_total DESC LIMIT 1");
                     while($consulta = mysqli_fetch_array($resultados)) {
                         $valdos = $consulta['total'];
                     }
                     
                     $sum = $valuno + $valdos;
 
-                    $conexion->query("INSERT INTO $tablaTotal (total) values('$sum')");
+                    $conexion->query("INSERT INTO $tablaTotal (id_usr,total) values('$idusr','$sum')");
 
                     include("cerrar_conexion.php");
-                    header('Location:index.php');
+                    header('Location:dashboard.php');
                     }
                 ?>
                 
@@ -123,20 +129,22 @@
                     <input class="form-control" type="text" name="gasto" placeholder="Monto">
                     <select class="form-control" type="text" name="fuenteg">
                         <option value="Seleccione Motivo">Seleccione Motivo</option>
-                        <option value="Arriendo">Arriendo</option>
-                        <option value="Mercado">Mercado</option>
+                        <option value="Hogar">Hogar</option>
+                        <option value="Alimentación">Alimentación</option>
                         <option value="Vestuario">Vestuario</option>
                         <option value="Estudio">Estudio</option>
-                        <option value="Empresas">Empresas</option>
+                        <option value="Inversión">Inversión</option>
+                        <option value="Prestamos">Prestamos</option>
                         <option value="Otro">Otro</option>
                     </select>
                     <input class="form-control" type="text" name="razon" placeholder="Detalles">
-                    <input class="form-control" type="date" name="fechOut" placeholder="Fecha">
+                    <input class="form-control" type="date" name="fechOut" value="<?php echo date('Y-m-d'); ?>">
                     <input class="form-control btn-outline-danger" type="submit" name="btn-out" value="Actualizar">
                     <?php
                 // ACTUALIZAR
                 if (isset($_POST['btn-out'])){
               
+                    $idusr = $_SESSION['idusr'];
                     $egreso = $_POST['gasto'];
                     $fuenteg = $_POST['fuenteg'];
                     $razon = $_POST['razon'];
@@ -147,20 +155,20 @@
                     } else {
                     include("abrir_conexion.php");
                     // INSERTAR VALOR A RESTAR
-                    $conexion->query("INSERT INTO $tablaEgresos (monto,detalle_e,detalles,fecha) values('$egreso','$fuenteg','$razon','$fechae')"); 
+                    $conexion->query("INSERT INTO $tablaEgresos (id_usr,monto,detalle_e,detalles,fecha) values('$idusr','$egreso','$fuenteg','$razon','$fechae')"); 
                     }
                     // CONSULTA VALOR TOTAL QUE SERÁ DISMINUIDO
-                    $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal ORDER BY id_total DESC LIMIT 1");
+                    $resultados = mysqli_query($conexion,"SELECT * FROM $tablaTotal WHERE id_usr = '$idusr' ORDER BY id_total DESC LIMIT 1");
                     while($consulta = mysqli_fetch_array($resultados)) {
                     $total = $consulta['total'];
                     
                         $total = $consulta['total'];
                         $act = $total - $egreso;
                         
-                    $conexion->query("INSERT INTO $tablaTotal (total) values('$act')");
+                    $conexion->query("INSERT INTO $tablaTotal (id_usr,total) values('$idusr','$act')");
 
                     include("cerrar_conexion.php");
-                    header('Location:index.php');
+                    header('Location:dashboard.php');
                     }
                 }
                 ?>

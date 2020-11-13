@@ -1,7 +1,7 @@
 <?php
 
     $host = "localhost";
-    $database = "nombroj";
+    $database = "nom";
     $name = "root";
     $clave = "";
 

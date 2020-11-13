@@ -4,17 +4,23 @@
 * Descripción: Sistema de cuentas simples para la administración de dinero en casa,
 * genera archivo pdf según rango deseado.
 */
+/* Para tabla de color FF9363*/
 * {
     padding: 0px;
     margin: 0px;
 }
+nav{
+    background: #A1BBBE !important;
+}
+.navbar-light .navbar-brand {
+    color:#fff !important;
+}
 .login {
     text-align:center;
-    margin:30% 0% 0% 0%;
+    margin:20% 0% 0% 0%;
 }
-.login h2 {
-    font-size:120px;
-    color:#292929;
+.login img {
+    width:90%;
 }
 .nombro {
     color:#35a700;
@@ -24,15 +30,4 @@
 form {
     text-align:center;
     padding:6% 0% 6% 0%;
-}
-nav {
-    background-color: #292929;
-    color: #fff;
-    width: 100%;
-}
-nav ul li {
-    background-color: #a2a2a2;
-    text-decoration: none;
-    list-style: none;
-    padding:2%;
 }
