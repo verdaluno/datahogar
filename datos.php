@@ -158,7 +158,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h2>Consultar Ingresos</h2>
                     <form action="datos.php" method="post">
                         <input class="form-control" type="date" name="fecI" value="<?php echo date("Y-m-d"); ?>">
@@ -166,7 +166,7 @@
                         <input class="form-control btn-outline-primary" type="submit" name="btnI" value="Mostrar">
                     </form>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <?php
                 // Consultar tabla ingresos
                 if(isset($_POST['btnI'])){
@@ -217,10 +217,10 @@
                 </tbody>
                 </table>
                 </div>
-            </div>
                 <?php } ?>
+            </div>
             
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <h2>Consultar Engresos</h2>
                     <form action="datos.php" method="post">
                         <input class="form-control" type="date" name="fecI" value="<?php echo date("Y-m-d"); ?>">
@@ -228,7 +228,7 @@
                         <input class="form-control btn-outline-primary" type="submit" name="btnE" value="Mostrar">
                     </form>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <?php
                 // Consultar tabla egresos
                 if(isset($_POST['btnE'])){
@@ -279,8 +279,8 @@
                 </tbody>
                 </table>
                 </div>
-            </div>
                 <?php } ?>
+            </div>
         </div>
     </div>
 <br/>
