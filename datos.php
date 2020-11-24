@@ -18,6 +18,7 @@
         <link rel="icon" href="img/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" type="text/css" href="css/estilos.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
     </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
@@ -28,6 +29,8 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
+              <a class="nav-link" href="dashboard.php">Inicio</a>
+              <a class="nav-link" href="datos.php">Registros</a>
             <a class="nav-link" href="salir.php">Salir</a>
           </li>
         </ul>
@@ -38,6 +41,14 @@
         <div class="row">
             <div class="col-md-6">
                 <h2>Registro Ingresos</h2>
+                <canvas id="chartIn" width="100%" height="100%"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h2>Registro Egresos</h2>
+                <canvas id="chartEg" width="100%" height="100%"></canvas>
+            </div>
+            
+            <div class="col-md-6">
                 <?php
                 include("abrir_conexion.php");
                 $resultados = mysqli_query($conexion,"SELECT COUNT(*) as nomina FROM $tablaIngresos WHERE id_usr = '$idusr' AND fuente = 'Nómina'");
@@ -58,35 +69,8 @@
                 }
                 include("cerrar_conexion.php");
                 ?>
-                <table class="table table-striped table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Fuente</th>
-                            <th>Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>Nómina</th>
-                            <th><?php echo $nomina; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Independiente</th>
-                            <th><?php echo $indepen; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Devoluciones</th>
-                            <th><?php echo $devol; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Otro</th>
-                            <th><?php echo $otroi; ?></th>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
             <div class="col-md-6">
-                <h2>Registro Egresos</h2>
                 <?php
                 include("abrir_conexion.php");
                 $resultados = mysqli_query($conexion,"SELECT COUNT(*) as hogar FROM $tablaEgresos WHERE id_usr = '$idusr' AND detalle_e = 'Hogar'");
@@ -119,44 +103,9 @@
                 }
                 include("cerrar_conexion.php");
                 ?>
-                <table class="table table-striped table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Fuente</th>
-                            <th>Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>Hogar</th>
-                            <th><?php echo $hogar; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Alimentación</th>
-                            <th><?php echo $alim; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Vestuario</th>
-                            <th><?php echo $ves; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Estudio</th>
-                            <th><?php echo $estudio; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Inversión</th>
-                            <th><?php echo $inver; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Prestamos</th>
-                            <th><?php echo $pres; ?></th>
-                        </tr>
-                        <tr>
-                            <th>Otro</th>
-                            <th><?php echo $otroe; ?></th>
-                        </tr>
-                    </tbody>
-                </table>
+            </div>
+            <div class="col-md-12">
+                <hr>
             </div>
             <div class="col-md-6">
                 <h2>Consultar Ingresos</h2>
@@ -287,5 +236,65 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    
+    
+    
+    <script>
+        
+    var nom = <?php echo $nomina ?>;
+    var ind = <?php echo $indepen ?>;
+    var dev = <?php echo $devol ?>;
+    var otr = <?php echo $otroi ?>;
+        
+    var ctx = document.getElementById("chartIn").getContext("2d");
+        var chartIn= new Chart(ctx,{
+        type:"doughnut",
+        data:{
+            labels:['Nomina','Independiente','Devoluciones','Otro'],
+            datasets:[{
+                data:[nom,ind,dev,otr],
+                backgroundColor:[
+                    'rgb(28, 87, 53)',
+                    'rgb(38, 115, 70)',
+                    'rgb(47, 144, 88)',
+                    'rgb(56, 173, 105)'
+                ]
+            }]
+        }
+        });
+    
+    </script>
+    <script>
+        
+    var hog = <?php echo $hogar ?>;
+    var ali = <?php echo $alim ?>;
+    var ves = <?php echo $ves ?>;
+    var est = <?php echo $estudio ?>;
+    var inv = <?php echo $inver ?>;
+    var pres = <?php echo $pres ?>;
+    var otre = <?php echo $otroe ?>;
+        
+    var ctxe = document.getElementById("chartEg").getContext("2d");
+        var chartEg= new Chart(ctxe,{
+        type:"doughnut",
+        data:{
+            labels:['Hogar','Alimentación','Vestuario','Estudio','Inversión','Prestamo','Otro'],
+            datasets:[{
+                data:[hog,ali,ves,est,inv,pres,otre],
+                backgroundColor:[
+                    'rgb(88, 30, 30)',
+                    'rgb(117, 40, 40)',
+                    'rgb(147, 50, 50)',
+                    'rgb(176, 60, 60)',
+                    'rgb(206, 70, 70)',
+                    'rgb(235, 80, 80)',
+                    'rgb(250, 90, 90)'
+                ]
+            }]
+        }
+        });
+    
+    </script>
+    
 </body>
 </html>
