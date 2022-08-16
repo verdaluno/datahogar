@@ -10,10 +10,13 @@
     margin: 0px;
 }
 nav{
-    background: #A1BBBE !important;
+    background: #383838 !important;
 }
-.navbar-light .navbar-brand {
-    color:#fff !important;
+.nav-link {
+    color: rgb(148, 148, 148) !important;
+}
+.navbar-light .navbar-brand{
+    color:rgb(255, 255, 255) !important;
 }
 .login {
     text-align:center;
